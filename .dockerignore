@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+
+# Build output (rebuild in container)
+dist/
+build/
+.svelte-kit/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage
+coverage/
+
+# Documentation (not needed in container)
+*.md
+!README.md
+
+# Development files
+.prettierrc
+.prettierignore
+.eslintrc*
+eslint.config.js
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Environment (use Docker secrets or env vars instead)
+.env
+.env.*
+
+# Example/sample files
+*.example
+*.sample
+
+# Plans and project docs
+.cursor/
+PROJECT.md

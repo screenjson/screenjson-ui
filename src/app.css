@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  /* Font family - strictly monospace for screenplay format */
+  --font-screenplay: "Courier Prime", Courier, "Courier New", monospace;
+  
+  /* Paper colors */
+  --color-paper: #ffffff;
+  --color-paper-dark: #1e1e1e;
+  
+  /* Viewer background */
+  --color-viewer-bg: #d1d5db;
+  --color-viewer-bg-dark: #111827;
+  
+  /* Text colors */
+  --color-text: #000000;
+  --color-text-dark: #e5e7eb;
+  
+  /* Accent colors */
+  --color-accent: #2563eb;
+  --color-accent-dark: #60a5fa;
+  
+  /* Error colors */
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+  
+  /* US Letter dimensions at 96 DPI */
+  --page-width: 8.5in;
+  --page-height: 11in;
+  
+  /* Screenplay margins (Warner Bros/Final Draft standard) */
+  --margin-action-left: 1.7in;
+  --margin-action-right: 1.1in;
+  --margin-dialogue-left: 2.7in;
+  --margin-dialogue-right: 2.4in;
+  --margin-character-left: 4.1in;
+  --margin-parenthetical-left: 3.4in;
+  --margin-parenthetical-right: 3.1in;
+  --margin-transition-left: 6.0in;
+  --margin-scene-number-left: 1.0in;
+  --margin-scene-number-right: 7.4in;
+  --margin-page-top: 0.5in;
+  --margin-page-bottom: 0.5in;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Screenplay font base */
+.screenplay-font {
+  font-family: var(--font-screenplay);
+  font-size: 12pt;
+  line-height: 1;
+}
+
+/* Print styles */
+@media print {
+  @page {
+    size: letter;
+    margin: 0;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .screenplay-page {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+}
