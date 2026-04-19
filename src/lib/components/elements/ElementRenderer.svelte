@@ -8,73 +8,42 @@
   import Shot from './Shot.svelte';
   import Slugline from './Slugline.svelte';
   import Transition from './Transition.svelte';
-  import { MARGINS } from '../../constants/formatting';
-  
+
   interface Props {
     element: PaginatedElement;
     numbered?: boolean;
-    class?: string;
   }
-  
-  let { 
-    element, 
-    numbered = false,
-    class: className = '' 
-  }: Props = $props();
+
+  let { element, numbered = false }: Props = $props();
 </script>
 
-<div class="element-wrapper {className}">
-  {#if element.sceneHeading}
-    <Slugline 
-      text={element.sceneHeading} 
-      sceneNumber={element.sceneNumber}
-      {numbered}
-    />
-  {/if}
-  
-  {#if element.type === 'action'}
-    <Action text={element.text} />
-  {:else if element.type === 'character'}
-    <Character 
-      name={element.characterName ?? element.text}
-      extension={element.isContinued ? "(CONT'D)" : undefined}
-    />
-  {:else if element.type === 'dialogue'}
-    {#if element.characterName && !element.isContinued}
-      <Character name={element.characterName} />
-    {:else if element.characterName && element.isContinued}
-      <Character name={element.characterName} extension="(CONT'D)" />
-    {/if}
-    <Dialogue text={element.text} />
-  {:else if element.type === 'parenthetical'}
-    <Parenthetical text={element.text} />
-  {:else if element.type === 'transition'}
-    <Transition text={element.text} />
-  {:else if element.type === 'shot'}
-    <Shot text={element.text} />
-  {:else if element.type === 'general'}
-    <General text={element.text} />
-  {/if}
-  
-  {#if element.hasMore}
-    <div 
-      class="more-indicator"
-      style="margin-left: {MARGINS.character.left}in;"
-    >
-      (MORE)
-    </div>
-  {/if}
-</div>
+<!-- Scene heading, rendered above the first element of any scene -->
+{#if element.sceneHeading}
+  <Slugline text={element.sceneHeading} sceneNumber={element.sceneNumber} {numbered} />
+{/if}
 
-<style>
-  .element-wrapper {
-    font-family: var(--font-screenplay);
-  }
-  
-  .more-indicator {
-    font-family: var(--font-screenplay);
-    font-size: 12pt;
-    line-height: 1;
-    margin-top: 0.167in;
-  }
-</style>
+<!-- Element body -->
+{#if element.type === 'action'}
+  <Action text={element.text} />
+{:else if element.type === 'character'}
+  <Character name={element.characterName ?? element.text} />
+{:else if element.type === 'dialogue'}
+  <!-- On a page continuation, re-emit the cue with (CONT'D). -->
+  {#if element.isContinued && element.characterName}
+    <Character name={element.characterName} />
+  {/if}
+  <Dialogue text={element.text} />
+{:else if element.type === 'parenthetical'}
+  <Parenthetical text={element.text} />
+{:else if element.type === 'transition'}
+  <Transition text={element.text} />
+{:else if element.type === 'shot'}
+  <Shot text={element.text} />
+{:else if element.type === 'general'}
+  <General text={element.text} />
+{/if}
+
+<!-- (MORE) marker when an element is broken by a page -->
+{#if element.hasMore}
+  <p class="sp-element sp-character mt-1">(MORE)</p>
+{/if}

@@ -1,3 +1,4 @@
+import '../app.css';
 /**
  * ScreenJSON-UI Library
  * An embeddable document viewer for ScreenJSON screenplay files

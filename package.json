@@ -1,27 +1,50 @@
 {
   "name": "screenjson-ui",
   "version": "1.0.0",
-  "description": "An embeddable document viewer for ScreenJSON screenplay files",
+  "description": "An embeddable document viewer for ScreenJSON screenplay files — renders Final Draft-style pages in the browser.",
+  "keywords": [
+    "screenplay",
+    "screenjson",
+    "viewer",
+    "final-draft",
+    "fountain",
+    "svelte"
+  ],
+  "homepage": "https://screenjson.com/tools/screenjson-ui/",
+  "bugs": {
+    "url": "https://github.com/screenjson/screenjson-ui/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/screenjson/screenjson-ui.git"
+  },
+  "license": "MIT",
   "type": "module",
-  "main": "./dist/screenjson-ui.js",
+  "main": "./dist/screenjson-ui.umd.js",
   "module": "./dist/screenjson-ui.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/screenjson-ui.js"
+      "import": "./dist/screenjson-ui.js",
+      "require": "./dist/screenjson-ui.umd.js"
     },
+    "./style.css": "./dist/style.css",
     "./dist/style.css": "./dist/style.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "*.css"
   ],
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "build:lib": "vite build --mode lib",
     "preview": "vite preview",
-    "serve": "npx serve static -p 8080",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
@@ -41,6 +64,7 @@
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "tailwindcss": "^4.0.0",
+    "terser": "^5.46.1",
     "typescript": "^5.0.0",
     "vite": "^6.0.0"
   },

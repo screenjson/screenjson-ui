@@ -118,20 +118,25 @@ function getSpacingBefore(
   }
 }
 
-/** Format scene heading from slugline */
+/** Format scene heading from slugline.
+ *  - Ensures the context ends in a period (`INT.` not `INT`) so the rendered
+ *    line matches Final Draft's industry convention.
+ *  - Joins context + setting with a single space.
+ *  - Adds " - TIME" if a time is set.
+ *  - Adds modifiers separated by " - ".
+ */
 function formatSceneHeading(scene: Scene): string {
   const { heading } = scene;
-  const parts = [heading.context, heading.setting];
-  
-  if (heading.time) {
-    parts.push('-', heading.time);
-  }
-  
-  if (heading.mods && heading.mods.length > 0) {
-    parts.push('-', heading.mods.join(' - '));
-  }
-  
-  return parts.join(' ');
+  const ctxRaw = (heading.context ?? '').trim().toUpperCase();
+  const ctx = ctxRaw && !/[.\/]$/.test(ctxRaw) ? ctxRaw + '.' : ctxRaw;
+  const parts: string[] = [];
+  if (ctx) parts.push(ctx);
+  if (heading.setting) parts.push(heading.setting);
+
+  let head = parts.join(' ').trim();
+  if (heading.time)         head += ' - ' + heading.time;
+  if (heading.mods?.length) head += ' - ' + heading.mods.join(' - ');
+  return head;
 }
 
 /** Get character name by ID */

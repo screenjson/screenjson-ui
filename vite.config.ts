@@ -6,32 +6,32 @@ import { resolve } from 'path';
 
 export default defineConfig(({ mode }): UserConfig => {
   if (mode === 'lib') {
-    // Library build for CDN distribution
+    /* Library build for npm + CDN distribution. */
     return {
       plugins: [
         tailwindcss(),
-        svelte({
-          compilerOptions: {
-            customElement: false
-          }
-        })
+        svelte({ compilerOptions: { customElement: false } })
       ],
       build: {
         lib: {
           entry: resolve(__dirname, 'src/lib/index.ts'),
           name: 'ScreenJSONUI',
-          fileName: 'screenjson-ui',
+          fileName: (format) =>
+            format === 'es' ? 'screenjson-ui.js' : `screenjson-ui.${format}.js`,
           formats: ['es', 'umd']
         },
         rollupOptions: {
           output: {
-            assetFileNames: 'style.[ext]',
+            exports: 'named',
+            assetFileNames: (asset) =>
+              asset.name === 'style.css' ? 'style.css' : asset.name ?? 'asset',
             globals: {}
           }
         },
         cssCodeSplit: false,
-        minify: 'terser',
-        sourcemap: true
+        minify: 'esbuild',
+        sourcemap: true,
+        emptyOutDir: true
       },
       resolve: {
         alias: [
@@ -42,7 +42,7 @@ export default defineConfig(({ mode }): UserConfig => {
     };
   }
 
-  // Development/SvelteKit build
+  /* Default: SvelteKit dev / SPA build. */
   return {
     plugins: [tailwindcss(), sveltekit()]
   };

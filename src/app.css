@@ -1,79 +1,163 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap");
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ----------------------------------------------------------------------------
+   Tailwind v4 design tokens.
+---------------------------------------------------------------------------- */
 @theme {
-  /* Font family - strictly monospace for screenplay format */
-  --font-screenplay: "Courier Prime", Courier, "Courier New", monospace;
-  
-  /* Paper colors */
-  --color-paper: #ffffff;
-  --color-paper-dark: #1e1e1e;
-  
-  /* Viewer background */
-  --color-viewer-bg: #d1d5db;
-  --color-viewer-bg-dark: #111827;
-  
-  /* Text colors */
-  --color-text: #000000;
-  --color-text-dark: #e5e7eb;
-  
-  /* Accent colors */
-  --color-accent: #2563eb;
-  --color-accent-dark: #60a5fa;
-  
-  /* Error colors */
-  --color-error: #dc2626;
-  --color-error-bg: #fef2f2;
-  
-  /* US Letter dimensions at 96 DPI */
-  --page-width: 8.5in;
+  --font-screenplay: "Courier Prime", "Courier New", Courier, ui-monospace, monospace;
+
+  /* Brand accents (shared with main site) */
+  --color-brand-500: #6a1ef0;
+  --color-brand-300: #a97dff;
+  --color-brand-50:  #f5f0ff;
+
+  /* Paper — light */
+  --color-paper:        #ffffff;
+  --color-paper-fg:     #0a0a08;
+  --color-paper-muted:  #4a4a45;
+  --color-paper-rule:   #e0e0dc;
+
+  /* Workspace surround — light */
+  --color-workspace:    #cfcdc6;
+  --color-workspace-fg: #1f1f1b;
+
+  /* UI chrome — light */
+  --color-ui-bg:     #ffffff;
+  --color-ui-fg:     #0a0a08;
+  --color-ui-muted:  #6b7280;
+  --color-ui-border: #e5e7eb;
+  --color-ui-hover:  #f3f4f6;
+
+  /* US Letter @ 96 DPI */
+  --page-width:  8.5in;
   --page-height: 11in;
-  
-  /* Screenplay margins (Warner Bros/Final Draft standard) */
-  --margin-action-left: 1.7in;
-  --margin-action-right: 1.1in;
-  --margin-dialogue-left: 2.7in;
-  --margin-dialogue-right: 2.4in;
-  --margin-character-left: 4.1in;
-  --margin-parenthetical-left: 3.4in;
-  --margin-parenthetical-right: 3.1in;
-  --margin-transition-left: 6.0in;
-  --margin-scene-number-left: 1.0in;
-  --margin-scene-number-right: 7.4in;
-  --margin-page-top: 0.5in;
-  --margin-page-bottom: 0.5in;
+
+  /* Screenplay margins (Final Draft / Warner Bros) */
+  --margin-page-top:            0.5in;
+  --margin-page-bottom:         0.5in;
+  --margin-action-left:         1.5in;
+  --margin-action-right:        1in;
+  --margin-dialogue-left:       2.5in;
+  --margin-dialogue-right:      2in;
+  --margin-character-left:      3.7in;
+  --margin-parenthetical-left:  3.1in;
+  --margin-parenthetical-right: 2.9in;
+  --margin-transition-left:     5.8in;
 }
 
-/* Base styles */
-* {
-  box-sizing: border-box;
-}
+/* ----------------------------------------------------------------------------
+   Dark mode: html.dark swaps paper + workspace + UI chrome tokens.
+---------------------------------------------------------------------------- */
+@layer base {
+  html.dark {
+    --color-paper:        #1a1a1c;
+    --color-paper-fg:     #ececea;
+    --color-paper-muted:  #9a9a93;
+    --color-paper-rule:   #2a2a2d;
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
+    --color-workspace:    #0a0a0c;
+    --color-workspace-fg: #ececea;
 
-/* Screenplay font base */
-.screenplay-font {
-  font-family: var(--font-screenplay);
-  font-size: 12pt;
-  line-height: 1;
-}
+    --color-ui-bg:     #14141a;
+    --color-ui-fg:     #ececea;
+    --color-ui-muted:  #9a9aa6;
+    --color-ui-border: #2a2a2e;
+    --color-ui-hover:  #1f1f25;
+  }
 
-/* Print styles */
-@media print {
-  @page {
-    size: letter;
+  html, body {
     margin: 0;
+    padding: 0;
   }
-  
-  .no-print {
-    display: none !important;
+
+  body {
+    background: var(--color-workspace);
+    color: var(--color-workspace-fg);
+    font-family: var(--font-screenplay);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
   }
-  
-  .screenplay-page {
-    page-break-after: always;
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-brand-500);
+    color: #ffffff;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Screenplay utilities.
+---------------------------------------------------------------------------- */
+
+@utility paper-page {
+  width:          var(--page-width);
+  min-height:     var(--page-height);
+  background:     var(--color-paper);
+  color:          var(--color-paper-fg);
+  font-family:    var(--font-screenplay);
+  font-size:      12pt;
+  line-height:    1.15;
+  padding-top:    var(--margin-page-top);
+  padding-bottom: var(--margin-page-bottom);
+  box-shadow:
+    0 6px 18px -4px rgba(0, 0, 0, 0.35),
+    0 2px 4px  -2px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+:where(html.dark) .paper-page {
+  box-shadow:
+    0 6px 22px -4px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(169, 125, 255, 0.08);
+}
+
+@utility sp-element {
+  font-family: var(--font-screenplay);
+  font-size:   12pt;
+  line-height: 1.15;
+  white-space: pre-wrap;
+  word-wrap:   break-word;
+}
+
+@utility sp-action        { margin-left: var(--margin-action-left);        margin-right: var(--margin-action-right); }
+@utility sp-dialogue      { margin-left: var(--margin-dialogue-left);      margin-right: var(--margin-dialogue-right); }
+@utility sp-character     { margin-left: var(--margin-character-left);     text-transform: uppercase; }
+@utility sp-parenthetical { margin-left: var(--margin-parenthetical-left); margin-right: var(--margin-parenthetical-right); }
+@utility sp-transition    { margin-left: var(--margin-transition-left);    text-transform: uppercase; font-weight: 700; }
+@utility sp-slugline      { margin-left: var(--margin-action-left);        margin-right: var(--margin-action-right); text-transform: uppercase; font-weight: 700; }
+
+@utility sp-space-before-slug       { margin-top: calc(2 / 6 * 1in); }
+@utility sp-space-after-slug        { margin-bottom: calc(1 / 6 * 1in); }
+@utility sp-space-before-char       { margin-top: calc(1 / 6 * 1in); }
+@utility sp-space-before-transition { margin-top: calc(1 / 6 * 1in); margin-bottom: calc(2 / 6 * 1in); }
+@utility sp-space-paragraph         { margin-top: calc(1 / 6 * 1in); }
+
+/* ----------------------------------------------------------------------------
+   Print
+---------------------------------------------------------------------------- */
+@media print {
+  @page { size: letter; margin: 0; }
+
+  html, body { background: #ffffff; }
+
+  .no-print { display: none !important; }
+
+  .paper-page {
+    box-shadow: none;
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    page-break-after:  always;
     page-break-inside: avoid;
   }
+  .paper-page:last-child { page-break-after: auto; }
 }

@@ -1,142 +1,124 @@
-# ScreenJSON-UI
+# screenjson-ui
 
-An embeddable document viewer for ScreenJSON screenplay files. Displays JSON-formatted screenplays as beautiful, PDF-style documents in the browser.
-
-## Features
-
-- **PDF-style rendering** - Displays screenplays with proper Hollywood formatting (Warner Bros/Final Draft standard)
-- **Dark/Light themes** - Built-in theme support with persistence
-- **Multi-language** - Support for screenplays with multiple language translations
-- **Virtual scrolling** - Efficient rendering for large documents (300+ pages)
-- **Responsive** - Works on mobile, tablet, and desktop (400px to 1200px+ viewports)
-- **Encryption support** - View encrypted screenplay content with password
-- **Bookmarks & Notes** - User annotations stored in localStorage
-- **Metadata panel** - View character lists, scene index, SFX/VFX/props breakdowns
-- **CDN-ready** - Embeddable via script tag with no build required
-
-## Installation
-
-### NPM
+An embeddable, framework-agnostic JavaScript viewer for [ScreenJSON](https://screenjson.com)
+documents. Renders screenplays as Final Draft / WriterDuet-style print pages
+in the browser, with light + dark themes, multi-language support, and
+in-browser AES-256 decryption.
 
 ```bash
 npm install screenjson-ui
 ```
 
-### CDN
-
 ```html
-<script src="https://cdn.screenjson.com/ui/screenjson-ui.js"></script>
+<script src="https://cdn.screenjson.com/ui/screenjson-ui.js" type="module"></script>
+<link  rel="stylesheet" href="https://cdn.screenjson.com/ui/screenjson-ui.css" />
 ```
 
-## Usage
+## Features
 
-### JavaScript API
+- Print-screenplay layout — US Letter, Courier Prime 12pt, industry margins.
+- Light + dark themes, with system-preference detection and `localStorage` persistence.
+- Multi-language documents — switch render language at runtime.
+- Auto-fit zoom — paper shrinks to viewport on narrow screens; manual zoom on top.
+- Built-in toolbar with theme, zoom, language, info, print, and download.
+- Tailwind v4 + native CSS variables — easy to re-theme.
+- Zero framework dependency in the embed API; native Svelte component for SvelteKit users.
 
-```javascript
+## Quick start
+
+### npm
+
+```ts
 import ScreenJSONUI from 'screenjson-ui';
+import 'screenjson-ui/style.css';
 
 const viewer = new ScreenJSONUI({
-  element: 'viewer', // Element ID or HTMLElement
-  src: 'https://example.com/screenplay.json',
-  theme: 'dark',
-  virtual: true,
-  onLoad: (doc) => console.log('Loaded:', doc.title),
-  onPageChange: (page) => console.log('Page:', page)
+  element: 'viewer',           // an id or HTMLElement
+  src:     '/screenplay.json', // URL — or use `document` for a pre-loaded object
+  theme:   'dark'              // 'light' | 'dark', defaults to system preference
 });
 ```
 
-### Data Attributes
+### CDN — single script tag
 
 ```html
-<script 
-  src="https://cdn.screenjson.com/ui/screenjson-ui.js"
-  data-src="screenplay.json"
-  data-theme="dark"
-  data-width="900"
-  data-height="600">
+<div id="viewer" style="height: 100vh;"></div>
+
+<link  rel="stylesheet" href="https://cdn.screenjson.com/ui/screenjson-ui.css" />
+<script type="module">
+  import ScreenJSONUI from 'https://cdn.screenjson.com/ui/screenjson-ui.js';
+
+  new ScreenJSONUI({ element: 'viewer', src: '/screenplay.json' });
 </script>
 ```
 
-### Query Parameters
+### CDN — data attributes (no JS needed)
 
+```html
+<div id="viewer" style="height: 100vh;"></div>
+
+<link  rel="stylesheet" href="https://cdn.screenjson.com/ui/screenjson-ui.css" />
+<script
+  src="https://cdn.screenjson.com/ui/screenjson-ui.js"
+  data-src="/screenplay.json"
+  data-theme="dark">
+</script>
 ```
-viewer.html?src=https://example.com/screenplay.json&theme=dark
-```
 
-## Configuration Options
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `element` | `string \| HTMLElement` | required | Target container |
-| `src` | `string` | - | URL to load ScreenJSON from |
-| `document` | `ScreenJSONDocument` | - | Pre-loaded document object |
-| `theme` | `'light' \| 'dark'` | `'light'` | Initial theme |
-| `zoom` | `number` | `1` | Initial zoom (0.5 - 2) |
-| `lang` | `string` | Document default | Language for multi-language docs |
-| `page` | `number` | `1` | Initial page number |
-| `numbered` | `boolean` | `false` | Show scene numbers in margins |
-| `paginated` | `boolean` | `true` | Show page numbers |
-| `corner` | `string` | `'top-right'` | Menu button position |
-| `virtual` | `boolean` | `false` | Use virtual scrolling |
-| `password` | `string` | - | Password for encrypted content |
-| `onLoad` | `function` | - | Called when document loads |
-| `onPageChange` | `function` | - | Called on page change |
-| `onError` | `function` | - | Called on error |
-
-## Svelte Component Usage
+### Svelte / SvelteKit
 
 ```svelte
-<script>
+<script lang="ts">
   import { ScreenJSONViewer } from 'screenjson-ui';
+  import 'screenjson-ui/style.css';
   import type { ScreenJSONDocument } from 'screenjson-ui';
-  
-  let document: ScreenJSONDocument = /* ... */;
+
+  export let document: ScreenJSONDocument;
 </script>
 
-<ScreenJSONViewer 
-  {document}
-  theme="light"
-  numbered={true}
-/>
+<ScreenJSONViewer {document} theme="light" />
 ```
+
+## Configuration
+
+All configuration goes through `ScreenJSONUIConfig`:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `element` | `string \| HTMLElement` | **required** | Mount target. String is treated as an element id. |
+| `src` | `string` | — | URL of a ScreenJSON document. |
+| `document` | `ScreenJSONDocument` | — | Pre-loaded document — overrides `src`. |
+| `theme` | `'light' \| 'dark'` | system preference | Initial theme. |
+| `zoom` | `number` | `1` | Manual zoom multiplier on top of auto-fit. 0.5 – 2. |
+| `lang` | `string` | document `lang` | BCP 47 tag — chooses which language to render. |
+| `numbered` | `boolean` | `false` | Show scene numbers in the margin. |
+| `paginated` | `boolean` | `true` | Show page numbers. |
+| `password` | `string` | — | Password for AES-256 encrypted documents. |
+| `onLoad` | `(doc) => void` | — | Called once after the document loads. |
+| `onPageChange` | `(page) => void` | — | Called on every page change. |
+| `onError` | `(err) => void` | — | Called on fetch / parse / decrypt errors. |
 
 ## Development
 
 ```bash
-# Install dependencies
+git clone https://github.com/screenjson/screenjson-ui.git
+cd screenjson-ui
 npm install
-
-# Start development server
-npm run dev
-
-# Build library for CDN
-npm run build:lib
-
-# Type check
-npm run check
+npm run dev          # SvelteKit dev server on http://127.0.0.1:5173
+npm run build:lib    # produce dist/screenjson-ui.{js,umd.js,css} for CDN/npm
 ```
 
-## Screenplay Formatting
+The standalone dev server at `/` includes a sidebar with bundled example
+screenplays, a file uploader, and a URL loader for any remote ScreenJSON
+document.
 
-The viewer follows Warner Bros/Final Draft formatting standards:
+## Browser support
 
-- **Paper size**: US Letter (8.5" x 11")
-- **Font**: Courier Prime, 12pt
-- **Lines per page**: 60 maximum
-- **Margins**:
-  - Action: 1.7" left, 1.1" right
-  - Dialogue: 2.7" left, 2.4" right
-  - Character: 4.1" left
-  - Parenthetical: 3.4" left, 3.1" right
-  - Transition: 6.0" left
-
-## Browser Support
-
-- Chrome 90+
-- Firefox 90+
-- Safari 14+
-- Edge 90+
+Chrome 90+, Firefox 90+, Safari 14+, Edge 90+. Uses CSS `zoom` for paper
+scaling — works in all four. Print uses the standard `@page { size: letter; }`.
 
 ## License
 
-MIT
+[MIT](./LICENSE) — © AC DEV SERVICES, LLC.
+
+The ScreenJSON schema is also open: see the [specification](https://screenjson.com/specification/).

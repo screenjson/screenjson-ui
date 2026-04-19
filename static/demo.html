@@ -1,139 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ScreenJSON-UI Demo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-    #viewer {
-      width: 100%;
-      height: 100vh;
-    }
-    .file-protocol-error {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: #f3f4f6;
-      padding: 2rem;
-      text-align: center;
-    }
-    .file-protocol-error h1 {
-      color: #dc2626;
-      margin-bottom: 1rem;
-    }
-    .file-protocol-error p {
-      color: #4b5563;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-    .file-protocol-error code {
-      display: block;
-      background: #1f2937;
-      color: #10b981;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      margin: 1rem 0;
-      font-family: 'Courier Prime', monospace;
-      text-align: left;
-    }
-    .file-protocol-error .hint {
-      font-size: 0.875rem;
-      color: #6b7280;
-      margin-top: 1.5rem;
-    }
-  </style>
-</head>
-<body>
-  <div id="viewer"></div>
-  
-  <script>
-    // Check if running from file:// protocol
-    if (window.location.protocol === 'file:') {
-      document.getElementById('viewer').innerHTML = `
-        <div class="file-protocol-error">
-          <h1>Cannot Run from file://</h1>
-          <p>
-            This demo requires a web server due to browser security restrictions.
-            The <code>file://</code> protocol blocks fetch requests (CORS policy).
-          </p>
-          <p><strong>To run this demo, use one of these methods:</strong></p>
-          <code>
-# Option 1: Use the dev server (recommended)<br>
-cd screenjson-ui<br>
-npm install<br>
-npm run dev<br>
-# Then open http://localhost:5173
-          </code>
-          <code>
-# Option 2: Quick static server<br>
-npx serve static -p 8080<br>
-# Then open http://localhost:8080/demo.html
-          </code>
-          <code>
-# Option 3: Python server<br>
-cd static<br>
-python3 -m http.server 8080<br>
-# Then open http://localhost:8080/demo.html
-          </code>
-          <p class="hint">
-            Or load a remote ScreenJSON file via URL parameter:<br>
-            <code style="display:inline; padding: 0.25rem 0.5rem;">?src=https://example.com/screenplay.json</code>
-          </p>
-        </div>
-      `;
-    }
-  </script>
-  
-  <!-- For development, use the built library -->
-  <script type="module">
-    // Skip if file:// protocol (error already shown)
-    if (window.location.protocol === 'file:') {
-      throw new Error('Cannot load modules from file:// protocol');
-    }
-    
-    // In production, this would be:
-    // import ScreenJSONUI from 'https://cdn.screenjson.com/ui/screenjson-ui.js';
-    
-    // For local development:
-    import ScreenJSONUI from '/src/lib/index.ts';
-    
-    // Get source from URL or use default
-    const params = new URLSearchParams(window.location.search);
-    const src = params.get('src') || '/69beb802-c6db-4653-9cb8-1dbd36ad6acf.json';
-    const theme = params.get('theme') || 'light';
-    
-    // Initialize viewer
-    const viewer = new ScreenJSONUI({
-      element: 'viewer',
-      src: src,
-      theme: theme,
-      virtual: true,
-      onLoad: (doc) => {
-        console.log('Document loaded:', doc.title);
-      },
-      onPageChange: (page) => {
-        console.log('Page changed:', page);
-      },
-      onError: (error) => {
-        console.error('Error:', error);
-      }
-    });
-    
-    // Expose for debugging
-    window.viewer = viewer;
-  </script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ScreenJSON UI — CDN demo</title>
+    <link rel="stylesheet" href="/dist/screenjson-ui.css" />
+    <style>
+      html, body { margin: 0; height: 100%; background: #cfcdc6; }
+      #viewer    { height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <div id="viewer"></div>
+
+    <script type="module">
+      import ScreenJSONUI from '/dist/screenjson-ui.js';
+
+      // Load a bundled example, then mount.
+      const res = await fetch('/examples/his-girl-friday.json');
+      const doc = await res.json();
+
+      new ScreenJSONUI({
+        element: 'viewer',
+        document: doc,
+        theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      });
+    </script>
+  </body>
 </html>
