@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="ScreenJSON viewer — renders ScreenJSON documents as studio-standard screenplays in the browser." />
     <title>ScreenJSON Viewer</title>
+        <script>
+      if (location.pathname.endsWith('/index.html')) {
+        const clean = location.pathname.slice(0, -'index.html'.length);
+        history.replaceState(null, '', clean + location.search + location.hash);
+      }
+    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover" class="bg-[color:var(--color-workspace)] text-[color:var(--color-workspace-fg)]">

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Viewer from '$lib/components/Viewer.svelte';
+  import { base } from '$app/paths';
   import ErrorDisplay from '$lib/components/ErrorDisplay.svelte';
   import type { ScreenJSONDocument } from '$lib/types/screenjson';
 
@@ -11,8 +12,8 @@
     | { kind: 'error'; title: string; message: string; hint?: string };
 
   const EXAMPLES: Array<{ id: string; name: string; path: string; blurb: string }> = [
-    { id: 'sampler', name: 'Sampler',           path: '/examples/sampler.json',         blurb: 'Synthetic doc with every element type.' },
-    { id: 'hgf',     name: 'His Girl Friday',   path: '/examples/his-girl-friday.json', blurb: 'Charles Lederer, 1940 — full FDX import.' }
+    { id: 'sampler', name: 'Sampler',           path: base + '/examples/sampler.json',         blurb: 'Synthetic doc with every element type.' },
+    { id: 'hgf',     name: 'His Girl Friday',   path: base + '/examples/his-girl-friday.json', blurb: 'Charles Lederer, 1940 — full FDX import.' }
   ];
 
   let state = $state<Loader>({ kind: 'idle' });

@@ -1,7 +1,7 @@
 {
   "name": "screenjson-ui",
   "version": "1.0.0",
-  "description": "An embeddable document viewer for ScreenJSON screenplay files — renders Final Draft-style pages in the browser.",
+  "description": "An embeddable document viewer for ScreenJSON screenplay files \u2014 renders Final Draft-style pages in the browser.",
   "keywords": [
     "screenplay",
     "screenjson",
@@ -48,7 +48,8 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:embed": "vite build"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.0",
