@@ -12,6 +12,7 @@ export { ScreenJSONUI as default } from './embed';
 export { default as ScreenJSONViewer } from './components/Viewer.svelte';
 export { default as ViewerVirtual } from './components/ViewerVirtual.svelte';
 export { default as Page } from './components/Page.svelte';
+export { default as TitlePage } from './components/TitlePage.svelte';
 export { default as Menu } from './components/Menu.svelte';
 export { default as ErrorDisplay } from './components/ErrorDisplay.svelte';
 export { default as PasswordModal } from './components/PasswordModal.svelte';
