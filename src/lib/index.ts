@@ -6,7 +6,10 @@ import '../app.css';
 
 // Embedding API
 export { ScreenJSONUI, type ScreenJSONUIConfig } from './embed';
-export { ScreenJSONUI as default } from './embed';
+// Re-export embed's real `default` (not `export { ScreenJSONUI as default }`): Safari /
+// WKWebView reject mixing that form with `export *` in the same module ("default cannot
+// be resolved by star export entries"). `embed.ts` ends with `export default ScreenJSONUI`.
+export { default } from './embed';
 
 // Components
 export { default as ScreenJSONViewer } from './components/Viewer.svelte';
