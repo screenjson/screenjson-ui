@@ -117,10 +117,10 @@ document.
 Chrome 90+, Firefox 90+, Safari 14+, Edge 90+. Uses CSS `zoom` for paper
 scaling — works in all four. Print uses the standard `@page { size: letter; }`.
 
-The published ESM entry (`src/lib/index.ts`) re-exports `default` from `embed.ts`
-(`export { default } from './embed'`) rather than `export { ScreenJSONUI as default }`,
-because **Safari and WKWebView** (iOS, macOS, Tauri) reject mixing the latter with
-`export *` in the same file (`default` cannot be resolved by star export entries).
+The published ESM entry (`src/lib/index.ts`) avoids **`export *`** in the public barrel
+(Safari / WKWebView can reject `import … from 'screenjson-ui'` when `default` and star
+re-exports share that module). Re-exports are explicit lists from `./embed`,
+`./components/elements`, `./services/bookmarks`, and `./constants/formatting`.
 
 ## License
 

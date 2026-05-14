@@ -22,8 +22,19 @@ export { default as PasswordModal } from './components/PasswordModal.svelte';
 export { default as MetadataPanel } from './components/MetadataPanel.svelte';
 export { default as VirtualScroller } from './components/VirtualScroller.svelte';
 
-// Element components
-export * from './components/elements';
+// Element components (explicit re-exports: avoid `export *` in this barrel — Safari /
+// WKWebView mishandle `default` resolution when star re-exports share the module graph.)
+export {
+  Action,
+  Character,
+  Dialogue,
+  General,
+  Parenthetical,
+  Shot,
+  Slugline,
+  Transition,
+  ElementRenderer
+} from './components/elements';
 
 // Types
 export type {
@@ -67,11 +78,50 @@ export { ErrorCode } from './services/errors';
 export { hasEncryptedContent, decryptDocument, decryptText } from './services/crypto';
 
 // Bookmarks
-export * from './services/bookmarks';
+export type { UserBookmark, UserNote } from './services/bookmarks';
+export {
+  getBookmarks,
+  addBookmark,
+  updateBookmark,
+  deleteBookmark,
+  getBookmarksForScene,
+  getNotes,
+  addNote,
+  updateNote,
+  deleteNote,
+  getNotesForElement,
+  getNotesForScene,
+  exportUserData,
+  importUserData,
+  clearUserData
+} from './services/bookmarks';
 
 // Stores
 export { themeStore, settingsStore, documentStore } from './stores';
 export type { Theme } from './stores';
 
 // Constants
-export * from './constants/formatting';
+export type { ElementMarginType } from './constants/formatting';
+export {
+  PAGE_WIDTH_INCHES,
+  PAGE_HEIGHT_INCHES,
+  DPI,
+  PAGE_WIDTH_PX,
+  PAGE_HEIGHT_PX,
+  FONT_SIZE_PT,
+  FONT_SIZE_PX,
+  CHARS_PER_INCH,
+  LINES_PER_INCH,
+  MAX_LINES_PER_PAGE,
+  HEADER_LINES,
+  FOOTER_LINES,
+  MARGINS,
+  inchesToPx,
+  inchesToPercent,
+  SPACING,
+  getMarginsForElement,
+  getTextWidth,
+  LINE_HEIGHT_PX,
+  estimateLines,
+  ELEMENT_STYLES
+} from './constants/formatting';
