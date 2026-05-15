@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
   import type { ScreenJSONDocument, Lang } from '../types/screenjson';
-  import { getText, getAvailableLanguages } from '../types/screenjson';
+  import { getText } from '../types/screenjson';
+  import { collectDocumentLanguages } from '../i18n/languages';
   import { paginate, type PaginationResult } from '../services/paginator';
   import Page from './Page.svelte';
   import Menu from './Menu.svelte';
@@ -53,18 +54,7 @@
   /* ---- pagination ---- */
   const paginationResult = $derived<PaginationResult>(paginate(doc, lang));
 
-  const availableLanguages = $derived.by<Lang[]>(() => {
-    const langs = new Set<Lang>();
-    for (const l of getAvailableLanguages(doc.title)) langs.add(l);
-    for (const scene of doc.document.scenes.slice(0, 10)) {
-      for (const el of scene.body.slice(0, 8)) {
-        if ('text' in el && el.text) {
-          for (const l of Object.keys(el.text)) langs.add(l as Lang);
-        }
-      }
-    }
-    return Array.from(langs);
-  });
+  const availableLanguages = $derived.by<Lang[]>(() => collectDocumentLanguages(doc));
 
   const title = $derived(getText(doc.title, lang) || 'Untitled');
 

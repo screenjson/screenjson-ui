@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ScreenJSONDocument, Lang } from '../types/screenjson';
+  import { getLanguageOptions, getUiStrings } from '../i18n/languages';
 
   interface Props {
     document: ScreenJSONDocument;
@@ -34,6 +35,8 @@
   }: Props = $props();
 
   const zoomPct = $derived(Math.round(zoom * 100));
+  const languageOptions = $derived(getLanguageOptions(availableLanguages));
+  const ui = $derived(getUiStrings(lang));
 
   function zoomIn()    { onZoomChange?.(Math.min(zoom + 0.1, 2)); }
   function zoomOut()   { onZoomChange?.(Math.max(zoom - 0.1, 0.5)); }
@@ -61,7 +64,7 @@
     </div>
 
     <span class="hidden md:inline text-xs text-[color:var(--color-ui-muted)] font-sans">
-      {totalPages} {totalPages === 1 ? 'page' : 'pages'}
+      {totalPages} {totalPages === 1 ? ui.page : ui.pages}
     </span>
 
     <div class="ml-auto flex items-center gap-1 sm:gap-2">
@@ -100,15 +103,15 @@
 
       <!-- Language -->
       {#if availableLanguages.length > 1}
-        <label class="sr-only" for="sj-lang-select">Language</label>
+        <label class="sr-only" for="sj-lang-select">{ui.language}</label>
         <select
           id="sj-lang-select"
           class="h-8 rounded-md border border-[color:var(--color-ui-border)] bg-transparent px-2 font-sans text-xs hover:bg-[color:var(--color-ui-hover)]"
           value={lang}
           onchange={(e) => onLangChange?.((e.target as HTMLSelectElement).value)}
         >
-          {#each availableLanguages as l}
-            <option value={l}>{l.toUpperCase()}</option>
+          {#each languageOptions as option (option.code)}
+            <option value={option.code}>{option.flag} {option.nativeLabel}</option>
           {/each}
         </select>
       {/if}
@@ -126,7 +129,7 @@
             <line x1="12" y1="16" x2="12" y2="12" />
             <line x1="12" y1="8" x2="12.01" y2="8" />
           </svg>
-          <span class="hidden md:inline">Info</span>
+          <span class="hidden md:inline">{ui.info}</span>
         </button>
       {/if}
 
@@ -136,7 +139,7 @@
           type="button"
           class="h-8 w-8 rounded-md border border-[color:var(--color-ui-border)] flex items-center justify-center hover:bg-[color:var(--color-ui-hover)]"
           onclick={onPrint}
-          aria-label="Print"
+          aria-label={ui.print}
         >
           <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 6 2 18 2 18 9" />
@@ -152,7 +155,7 @@
           type="button"
           class="h-8 w-8 rounded-md border border-[color:var(--color-ui-border)] flex items-center justify-center hover:bg-[color:var(--color-ui-hover)]"
           onclick={onDownload}
-          aria-label="Download ScreenJSON"
+          aria-label={ui.download}
         >
           <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -167,7 +170,7 @@
         type="button"
         class="h-8 w-8 rounded-md border border-[color:var(--color-ui-border)] flex items-center justify-center hover:bg-[color:var(--color-ui-hover)]"
         onclick={toggleTheme}
-        aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+        aria-label={theme === 'dark' ? ui.lightMode : ui.darkMode}
       >
         {#if theme === 'dark'}
           <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">

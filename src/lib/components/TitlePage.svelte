@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { ScreenJSONDocument, Lang, Author, Contributor, Source } from '../types/screenjson';
   import { getText } from '../types/screenjson';
+  import { getUiStrings } from '../i18n/languages';
 
   interface Props {
     document: ScreenJSONDocument;
@@ -21,6 +22,7 @@
       : ''
   );
   const genres = $derived<string[]>((doc as unknown as { genre?: string[] }).genre ?? []);
+  const ui = $derived(getUiStrings(lang));
 
   function personName(p: Author | Contributor): string {
     return [p.given, p.family].filter(Boolean).join(' ').trim();
@@ -32,10 +34,10 @@
     <div class="title-spacer"></div>
 
     <div class="title-main">
-      <h1 class="title-heading">{title || 'Untitled Screenplay'}</h1>
+      <h1 class="title-heading">{title || ui.untitledScreenplay}</h1>
 
       {#if authors.length > 0}
-        <p class="title-by">by</p>
+        <p class="title-by">{ui.by}</p>
         <div class="title-authors">
           {#each authors as author (author.id)}
             <p class="title-author">{personName(author)}</p>
@@ -55,7 +57,7 @@
         {@const srcTitle = src.title ? getText(src.title, lang) : ''}
         {#if srcTitle}
           <p class="title-source">
-            Based on the {src.type ?? 'work'} <em>{srcTitle}</em>
+            {ui.basedOn} {src.type ?? ui.work} <em>{srcTitle}</em>
           </p>
         {/if}
       {/each}
@@ -74,7 +76,7 @@
     {#if !hideScrollHint}
       <p class="title-scroll-hint" aria-hidden="true">
         <span class="title-scroll-arrow">↓</span>
-        <span>Scroll to read</span>
+        <span>{ui.scrollToRead}</span>
       </p>
     {/if}
   </div>

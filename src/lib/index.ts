@@ -61,6 +61,9 @@ export type {
 
 export { getText, getAvailableLanguages, hasText, hasCharacter } from './types/screenjson';
 
+export { collectDocumentLanguages, getLanguageOption, getLanguageOptions, getUiStrings } from './i18n/languages';
+export type { LanguageOption, UiStrings } from './i18n/languages';
+
 // Services
 export { DocumentLoader, loader, loadFromUrl } from './services/loader';
 export type { LoadResult, LoaderOptions } from './services/loader';
