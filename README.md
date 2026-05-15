@@ -5,9 +5,10 @@ documents. Renders screenplays as Final Draft / WriterDuet-style print pages
 in the browser, with light + dark themes, multi-language support, and
 in-browser AES-256 decryption.
 
-```bash
-npm install screenjson-ui
-```
+![Light mode](screenjson-ui_light_mode.png)
+
+![Darj mode](screenjson-ui_dark_mode.png)
+
 
 ```html
 <script src="https://cdn.screenjson.com/ui/screenjson-ui.js" type="module"></script>
